@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ChenkaCoffeeShop.Models.tblTable>
+
+<script src="~/js/jquery.min.js"></script>
+<div class="container">
+    <h2 style="color:white">View Tables</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="color:white">Table Number</th>
+                <th style="color:white">Number Of Sits</th>
+                <th style="color:white">Area</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="color:white">@item.tableId</td>
+                    <td style="color:white">@item.numSeats</td>
+                    <td style="color:white">@item.area</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Table", new { id = item.tableId})" class="btn btn-info">Edit Table</a>
+                        <a href="@Url.Action("Delete", "Table", new { id = item.tableId})" class="btn btn-danger">Delete Table</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

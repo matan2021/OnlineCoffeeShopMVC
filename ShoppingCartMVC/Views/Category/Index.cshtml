@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ChenkaCoffeeShop.Models.tblCategories>
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/js/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $("#searchBox").on("keyup", function () {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+<div class="container">
+    <h2 style="color:white"> View Category</h2>
+    <table  class="table"  >
+        <thead>
+            <tr>
+                <th style="color:white">ID</th>
+                <th style="color:white">Name</th>
+                <th style="color:white">Action</th>
+            </tr>
+        </thead>
+        <tbody  id="myTable">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="color:white">@item.CatId</td>
+                    <td style="color:white">@item.Name</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Category", new { id = item.CatId})" class="btn btn-info">Edit</a>
+                        <a href="@Url.Action("Delete", "Category", new { id = item.CatId})" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ChenkaCoffeeShop.Models.TableSits>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/js/jquery.min.js"></script>
+
+<div class="container">
+    <h2 style="color:white">View Sits</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="color:white">Table Number</th>
+                <th style="color:white">Sit Number</th>
+                <th style="color:white">Available</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td style="color:white">@item.tableId</td>
+                <td style="color:white">@item.SitId</td>
+                @if (item.available == 1)
+                {
+                    if ((int)Session["userRole"] == 3)
+                    {
+                        <td>
+                            <a href="@Url.Action("SaveSit", "Sit", new { SitId = item.SitId, userId = Session["uid"] })" class="btn btn-info">Save Sit</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a style="color:turquoise" class="info">Available</a>
+                        </td>
+                    }
+                }
+                else
+                {
+                    if ((int)Session["userRole"] == 3)
+                    {
+                        <td>
+                            <span class="btn btn-outline-warning">Taken :(</span>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a href="@Url.Action("ReleaseSit", "Sit", new { SitId = item.SitId})" class="btn btn-info">Release Sit</a>
+                        </td>
+                    }
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,117 @@
+Create Database dbOnlineCoffeeShop
+use dbOnlineCoffeeShop
+
+--Tables--
+=== Users ====
+CREATE TABLE [dbo].[tblUser] (
+    [UserId]   INT          IDENTITY (1, 1) NOT NULL,
+    [Name]     VARCHAR (50) NULL,
+    [Email]    VARCHAR (50) NULL,
+    [Password] VARCHAR (50) NULL,
+    [RoleType] INT          NULL,
+    PRIMARY KEY CLUSTERED ([UserId] ASC)
+);
+
+=== Categories ====
+CREATE TABLE [dbo].[tblCategories] (
+    [CatId] INT          IDENTITY (1, 1) NOT NULL,
+    [Name]  VARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([CatId] ASC)
+);
+
+=== Products ====
+CREATE TABLE [dbo].[tblProducts] (
+    [ProID]       INT            IDENTITY (1, 1) NOT NULL,
+    [Name]        VARCHAR (50)   NULL,
+    [Description] VARCHAR (50)   NULL,
+    [Unit]        INT            NULL,
+    [Image]       VARCHAR (1000) NULL,
+    [CatId]       INT            NULL,
+    PRIMARY KEY CLUSTERED ([ProID] ASC),
+    CONSTRAINT [FK_tblProducts_tblCategories] FOREIGN KEY ([CatId]) REFERENCES [dbo].[tblCategories] ([CatId])
+);
+
+=== Order ====
+CREATE TABLE [dbo].[tblOrder] (
+    [OrderId]   INT           IDENTITY (1, 1) NOT NULL,
+    [ProID]     INT           NULL,
+    [Contact]   VARCHAR (50)  NULL,
+    [Unit]      INT           NULL,
+    [Qty]       INT           NULL,
+    [Total]     INT           NULL,
+    [OrderDate] DATETIME      NULL,
+    [InvoiceId] INT           NULL,
+    PRIMARY KEY ([OrderId] ASC),
+    FOREIGN KEY ([InvoiceId]) REFERENCES [dbo].[tblInvoice] ([InvoiceId]),
+    CONSTRAINT [FK_tblOrder_tblProducts] FOREIGN KEY ([ProID]) REFERENCES [dbo].[tblProducts] ([ProID])
+);
+
+=== Invoice ====
+CREATE TABLE [dbo].[tblInvoice] (
+    [InvoiceId]   INT          IDENTITY (1, 1) NOT NULL,
+    [UserId]      INT          NULL,
+    [Bill]        INT          NULL,
+    [Payment]     VARCHAR (50) NULL,
+    [InvoiceDate] DATETIME         NULL,
+    [Status]    tinyint        NULL,
+    PRIMARY KEY ([InvoiceId] ASC),
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[tblUser] ([UserId])
+);
+
+--===Table===
+CREATE TABLE dbo.tblTable
+(
+	tableId	int	identity(1,1) not null,
+	numSeats int null,
+	area	varchar(50) null,
+	primary key(tableId)
+);
+
+--==Seats===
+CREATE TABLE dbo.tblSit
+(
+	sitId	int identity(1,1) not null,
+	available tinyint	not null,
+	tableId int not null,
+	userId	int null,
+	primary key(sitId),
+	FOREIGN key(tableId) REFERENCES dbo.tblTable(tableId),
+	FOREIGN key(userId) REFERENCES dbo.tblUser(UserId)
+);
+
+
+--Views--
+
+create view UserInvoices as
+select tblInvoice.InvoiceId,  tblUser.Name as 'Customer', 
+ tblInvoice.Bill,tblInvoice.Payment, tblInvoice.InvoiceDate
+ from tblInvoice
+inner join tblUser on tblUser.UserId = tblInvoice.UserId
+where tblInvoice.UserId = tblUser.UserId
+
+/* get all Products for admin  */
+create view Products as
+select tblProducts.ProID, tblProducts.Name, tblCategories.Name as 'Category', tblProducts.Description, tblProducts.Unit, tblProducts.Image
+from tblProducts
+inner join tblCategories on tblCategories.CatId = tblProducts.CatId
+
+
+/* overall order's */
+create view Orders as 
+select tblInvoice.InvoiceId,tblUser.UserId, tblUser.Name as 'user', tblInvoice.Bill,tblInvoice.Payment
+, tblInvoice.InvoiceDate,tblInvoice.Status  from tblInvoice
+inner join tblUser on tblUser.UserId = tblInvoice.UserId
+
+
+/* user's order  */
+create view OrderUsers as
+select tblInvoice.InvoiceId,tblUser.UserId, tblUser.Name as 'user', tblInvoice.Bill,tblInvoice.Payment
+, tblInvoice.InvoiceDate,tblInvoice.Status  from tblInvoice
+inner join tblUser on tblUser.UserId = tblInvoice.UserId
+where tblInvoice.Status = 1
+
+/* get table sits */
+create view TableSits AS
+select tblSit.SitId,tblSit.tableId,tblSit.available,tblTable.tableId
+from tblSit
+inner join tblTable on tblTable.tableId = tblSit.tableId

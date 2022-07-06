@@ -1,0 +1,34 @@
+﻿@model ChenkaCoffeeShop.Models.Orders
+
+@using(Html.BeginForm())
+{
+<div style="margin-left:600px;color:white;margin-top:200px">
+    <span>Invoice ID:</span>
+    @Html.DisplayFor(model => Model.InvoiceId)
+    <br />
+    <br />
+    <span>User ID:</span>
+    @Html.DisplayFor(model => Model.UserId)
+    <br />
+    <br />
+    <span>Payment Type:</span>
+    <div class="col-md-10">
+        @Html.RadioButtonFor(model => Model.Payment, "Cash")
+        Cash
+        <br />
+        @Html.RadioButtonFor(model => Model.Payment, "Credit Card")
+        Credit Card
+        <br />
+    </div>
+        <span>Total:</span>
+        @Html.EditorFor(model => model.Bill)
+        <br />
+        <br />
+        <span>Invoice Date:</span>
+        @Html.DisplayFor(model => model.InvoiceDate)
+        <br />
+        <br />
+        <input type="submit" value="Confirm Order" class="btn btn-success" />
+    </div>
+
+    }

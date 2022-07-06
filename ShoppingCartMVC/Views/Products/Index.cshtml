@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ChenkaCoffeeShop.Models.Products>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="~/js/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function ()
+    {
+        $("#searchBox").on("keyup", function ()
+        {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function ()
+            {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+<div class="container">
+    <h2 style="color:white">View Products</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="color:white">ID</th>
+                <th style="color:white">Category</th>
+                <th style="color:white">Name</th>
+                <th style="color:white">Desc</th>
+                <th style="color:white">Unit</th>
+                <th style="color:white">Image</th>
+                <th style="color:white">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr style="color:white">
+                    <td> @item.ProID</td>
+                    <td>@item.Category</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Unit</td>
+                    <td> <img src="~/Uploads/@item.Image" style="width:150px; height:100px;" /></td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Products", new { id = item.ProID})" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("Deleted", "Products", new { id = item.ProID })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
